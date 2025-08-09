@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeenSprouts — Watch</title>
+  <link rel="icon" href="assets/logo.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav" style="justify-content:flex-start; gap:12px">
+      <a href="index.html" class="brand" aria-label="DeenSprouts home">
+        <img src="assets/logo.png" alt="DeenSprouts" class="logo-nav" onerror="this.style.display='none'">
+      </a>
+      <span style="flex:1"></span>
+      <a class="auth" href="#" id="loginLink">Login</a>
+      <a class="auth" href="#" id="signupLink">Sign up</a>
+    </nav>
+  </header>
+
+  <main class="container watch">
+    <section class="watch-main card">
+      <div id="player" class="player"></div>
+      <div id="watch-title" class="watch-title"></div>
+    </section>
+    <aside class="watch-side">
+      <h3 class="side-heading">Related</h3>
+      <div id="related-videos" class="related-list"></div>
+    </aside>
+  </main>
+
+  <section class="comments">
+    <h3>Comments</h3>
+    <div id="comments"></div>
+    <div class="comment-form">
+      <input id="cName" placeholder="Name">
+      <input id="cText" placeholder="Write a comment...">
+      <button id="cBtn" class="btn">Post</button>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.polyfilled.js"></script>
+  <script src="watch.v901.js?v=901"></script>
+</body>
+</html>
