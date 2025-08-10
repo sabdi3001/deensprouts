@@ -8,7 +8,11 @@ function extFromMime(mime){
 }
 function makeId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 
-export async function handler(event) {
+export async function handler(event, context) {
+  const user = context.clientContext && context.clientContext.user;
+  if(!user){
+    return { statusCode: 401, body: JSON.stringify({ error: 'Authentication required to upload.' }) };
+  }
   if(event.httpMethod!=='POST') return { statusCode: 405, body: 'Method Not Allowed' };
   const isB64 = event.isBase64Encoded;
   const ct = event.headers['content-type'] || event.headers['Content-Type'] || 'application/octet-stream';
@@ -26,7 +30,7 @@ export async function handler(event) {
   await store.set(key, buf, { contentType: ct });
   let index = await idxStore.get('index.json', { type: 'json' });
   if(!Array.isArray(index)) index = [];
-  const item = { id, key, title, filename, mime: ct, size: buf.length, createdAt: new Date().toISOString() };
+  const item = { id, key, title, filename, mime: ct, size: buf.length, createdAt: new Date().toISOString(), user: { id: user.sub, email: user.email } };
   index.unshift(item);
   await idxStore.set('index.json', JSON.stringify(index), { contentType: 'application/json; charset=utf-8' });
 

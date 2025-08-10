@@ -5,11 +5,14 @@
   <title>DeenSprouts — Upload</title>
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
-  <link rel="stylesheet" href="styles.css?v=1100">
+  <link rel="stylesheet" href="styles.css?v=1102">
+  <style>
+    .notice{border:1px solid #e6efe9;border-radius:12px;padding:12px;background:#fff;box-shadow:0 8px 20px rgba(11,107,83,.06);margin-bottom:10px}
+  </style>
 </head>
 <body>
 <header class="topbar"><nav class="nav">
-  <a href="index.html" class="brand"><img src="assets/logo.png?v=1100" class="logo-nav" alt="DeenSprouts"></a>
+  <a href="index.html" class="brand"><img src="assets/logo.png?v=1102" class="logo-nav" alt="DeenSprouts"></a>
   <div class="nav-gap"></div>
   <a class="nav-link" href="policy.html">Policy</a>
   <a class="nav-link" href="contact.html">Contact</a>
@@ -21,9 +24,9 @@
 <main class="container">
   <div class="contact-card" style="max-width:860px;margin:0 auto;border:1px solid var(--border);border-radius:16px;background:#fff;padding:20px;box-shadow:0 20px 50px rgba(11,107,83,.08)">
     <h1 style="margin-top:0">Upload your video</h1>
-    <p class="muted">Max length: <b>5 minutes</b>. Accepted: MP4, WebM. Please ensure you have rights to upload.</p>
+    <div id="gate" class="notice muted">Checking sign-in status…</div>
 
-    <form id="upForm">
+    <form id="upForm" class="hidden">
       <label>Title <input type="text" id="uTitle" required></label>
       <label style="display:block;margin-top:8px">Video file <input type="file" id="uFile" accept="video/mp4,video/webm" required></label>
       <video id="preview" controls style="max-width:100%;margin-top:8px;display:none"></video>
@@ -34,14 +37,32 @@
 </main>
 
 <footer class="footer">© DeenSprouts • <a href="policy.html">Policy</a> • <a href="contact.html">Contact</a></footer>
-<script src="identity.v1100.js?v=1100"></script>
+<script src="identity.v1102.js?v=1102"></script>
 <script>
+  const gate=document.getElementById('gate');
+  const form=document.getElementById('upForm');
   const fileEl=document.getElementById('uFile'), prev=document.getElementById('preview'), msg=document.getElementById('uMsg');
+
+  window.__dsIdentity?.requireUser(async function(user){
+    if(!window.__dsIdentity || !window.__dsIdentity.available){
+      gate.innerHTML='Sign in is not available yet. Please enable Netlify Identity.';
+      return;
+    }
+    if(!user){
+      gate.innerHTML='You must be signed in to upload. <a href="#" id="goLogin">Log in</a> or <a href="signup.html">Sign up</a>.';
+      document.getElementById('goLogin').addEventListener('click', function(e){ e.preventDefault(); if(window.netlifyIdentity){ netlifyIdentity.open("login"); } });
+      return;
+    }
+    gate.classList.add('hidden');
+    form.classList.remove('hidden');
+  });
+
   fileEl.addEventListener('change',()=>{
     const f=fileEl.files[0]; if(!f){ prev.style.display='none'; return;}
     const url=URL.createObjectURL(f); prev.src=url; prev.style.display='block';
     prev.onloadedmetadata=()=>{ if(prev.duration>300){ msg.textContent='Video is longer than 5 minutes.'; fileEl.value=''; prev.style.display='none'; URL.revokeObjectURL(url);} else { msg.textContent=''; } };
   });
+
   document.getElementById('upForm').addEventListener('submit', async (e)=>{
     e.preventDefault();
     const f=fileEl.files[0]; const title=document.getElementById('uTitle').value.trim();
@@ -49,7 +70,18 @@
     if(f.size>90*1024*1024){ msg.textContent='File too large. Please keep under ~90MB.'; return; }
     msg.textContent='Uploading…';
     try{
-      const r=await fetch('/.netlify/functions/upload', { method:'POST', headers:{ 'Content-Type': f.type||'application/octet-stream', 'X-File-Name': f.name, 'X-Title': title }, body:f });
+      const token = await (window.__dsIdentity && window.__dsIdentity.getToken());
+      if(!token){ msg.textContent='Please log in again to upload.'; return; }
+      const r=await fetch('/.netlify/functions/upload', {
+        method:'POST',
+        headers:{ 
+          'Content-Type': f.type||'application/octet-stream',
+          'X-File-Name': f.name,
+          'X-Title': title,
+          'Authorization': 'Bearer ' + token
+        },
+        body:f
+      });
       const txt=await r.text(); let data=null; try{ data=JSON.parse(txt);}catch(e){}
       if(!r.ok){ msg.textContent=(data&&data.error)||'Upload failed.'; return; }
       msg.textContent='Uploaded. Thank you!'; setTimeout(()=>{ window.location.href='video.html?id='+encodeURIComponent(data.id)+'&type=upload'; }, 1200);
