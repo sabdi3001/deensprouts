@@ -1,0 +1,83 @@
+{
+  "shorts": [
+    {
+      "id": "rUWxSEwctFU",
+      "title": "Morning Dua \u2014 voice-only (Shorts)",
+      "no_music": true,
+      "tags": [
+        "dua",
+        "morning"
+      ],
+      "embeddable": true
+    },
+    {
+      "id": "2Vv-BfVoq4g",
+      "title": "Evening Dua \u2014 voice-only (Shorts)",
+      "no_music": true,
+      "tags": [
+        "dua",
+        "evening"
+      ],
+      "embeddable": true
+    },
+    {
+      "id": "UceaB4D0jpo",
+      "title": "Before Eating Dua \u2014 voice-only (Shorts)",
+      "no_music": true,
+      "tags": [
+        "dua",
+        "food"
+      ],
+      "embeddable": true
+    },
+    {
+      "id": "pXRviuL6vMY",
+      "title": "After Eating Dua \u2014 voice-only (Shorts)",
+      "no_music": true,
+      "tags": [
+        "dua",
+        "food"
+      ],
+      "embeddable": true
+    },
+    {
+      "id": "RubBzkZzpUA",
+      "title": "Entering Home Dua \u2014 voice-only (Shorts)",
+      "no_music": true,
+      "tags": [
+        "dua",
+        "home"
+      ],
+      "embeddable": true
+    },
+    {
+      "id": "hLQl3WQQoQ0",
+      "title": "Leaving Home Dua \u2014 voice-only (Shorts)",
+      "no_music": true,
+      "tags": [
+        "dua",
+        "home"
+      ],
+      "embeddable": true
+    },
+    {
+      "id": "JGwWNGJdvx8",
+      "title": "Sleep Dua \u2014 voice-only (Shorts)",
+      "no_music": true,
+      "tags": [
+        "dua",
+        "sleep"
+      ],
+      "embeddable": true
+    },
+    {
+      "id": "RgKAFK5djSk",
+      "title": "Istighfar Reminder \u2014 voice-only (Shorts)",
+      "no_music": true,
+      "tags": [
+        "dhikr"
+      ],
+      "embeddable": true
+    }
+  ]
+}
