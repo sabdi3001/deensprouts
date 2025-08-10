@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeenSprouts — Sign up</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+  <link rel="stylesheet" href="styles.css?v=1005">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav">
+      <a href="index.html" class="brand"><img src="assets/logo.png?v=1005" class="logo-nav" alt="DeenSprouts"></a>
+      <div class="nav-gap"></div>
+      <a class="nav-link" href="policy.html">Policy</a>
+      <a class="nav-link" href="contact.html">Contact</a>
+      <a class="nav-link" id="loginLink" href="auth.html">Log in</a>
+      <a class="nav-link" id="signupLink" href="signup.html">Sign up</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="contact-card" style="max-width:720px;margin:0 auto;border:1px solid var(--border);border-radius:16px;background:#fff;padding:20px;box-shadow:0 20px 50px rgba(11,107,83,.08)">
+      <h1 style="margin-top:0">Create your account</h1>
+      <p class="muted">You must be <b>13 or older</b> to sign up.</p>
+      <form id="suForm">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <label>Email <input type="email" id="suEmail" required></label>
+          <label>Password <input type="password" id="suPass" required minlength="6"></label>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:10px">
+          <label>Birth Year <input type="number" id="dobY" required min="1900" max="2100" placeholder="YYYY"></label>
+          <label>Month <input type="number" id="dobM" required min="1" max="12" placeholder="MM"></label>
+          <label>Day <input type="number" id="dobD" required min="1" max="31" placeholder="DD"></label>
+        </div>
+        <div style="margin:10px 0">
+          <label><input type="checkbox" id="suAgree" required> I confirm the information is accurate and I am at least 13 years old.</label>
+        </div>
+        <div id="suMsg" class="muted" style="margin:6px 0"></div>
+        <button class="btn" type="submit">Create account</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">© DeenSprouts • <a href="policy.html">Policy</a> • <a href="contact.html">Contact</a></footer>
+
+  <script src="identity.v1005.js?v=1005"></script>
+  <script>
+    function ageFrom(Y,M,D){
+      const today=new Date(); let age=today.getFullYear()-Y;
+      const m=today.getMonth()+1 - M;
+      if(m<0 || (m===0 && today.getDate()<D)) age--;
+      return age;
+    }
+    document.getElementById('suForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const email = document.getElementById('suEmail').value.trim();
+      const pass  = document.getElementById('suPass').value;
+      const Y = parseInt(document.getElementById('dobY').value,10);
+      const M = parseInt(document.getElementById('dobM').value,10);
+      const D = parseInt(document.getElementById('dobD').value,10);
+      const msg = document.getElementById('suMsg');
+      if(!email || !pass || !Y || !M || !D){ msg.textContent='Please complete all fields.'; return; }
+      if(ageFrom(Y,M,D) < 13){ msg.textContent='You must be at least 13 to sign up.'; return; }
+      msg.textContent='Creating your account…';
+
+      try{
+        const r = await fetch('/.netlify/identity/signup', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ email, password: pass, data: { dob: `${Y}-${String(M).padStart(2,'0')}-${String(D).padStart(2,'0')}` } })
+        });
+        const txt = await r.text();
+        let data = null; try{ data = JSON.parse(txt); }catch(e){}
+        if(!r.ok){ msg.textContent=(data && (data.error || data.msg)) || 'Sign up failed.'; return; }
+        msg.textContent='Account created. Please check your email to verify.';
+        setTimeout(()=>{ window.location.href='auth.html'; }, 1500);
+      }catch(err){
+        msg.textContent='Network error. Please try again.';
+      }
+    });
+  </script>
+</body>
+</html>
