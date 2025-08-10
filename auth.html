@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeenSprouts — Account</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+  <link rel="stylesheet" href="styles.css?v=1101">
+  <style>
+    .auth-card{max-width:780px;margin:20px auto;border:1px solid #e6efe9;border-radius:16px;background:#fff;padding:20px;box-shadow:0 20px 50px rgba(11,107,83,.08)}
+    .auth-actions{display:flex;gap:10px;flex-wrap:wrap}
+  </style>
+</head>
+<body>
+<header class="topbar"><nav class="nav">
+  <a href="index.html" class="brand"><img src="assets/logo.png?v=1101" class="logo-nav" alt="DeenSprouts"></a>
+  <div class="nav-gap"></div>
+  <a class="nav-link" href="policy.html">Policy</a>
+  <a class="nav-link" href="contact.html">Contact</a>
+  <a class="nav-link" href="upload.html">Upload</a>
+  <a class="nav-link" id="loginLink" href="auth.html">Log in</a>
+  <a class="nav-link" id="signupLink" href="signup.html">Sign up</a>
+</nav></header>
+
+<main class="container">
+  <div class="auth-card">
+    <h1 style="margin-top:0;color:#0f5132">Your account</h1>
+    <p class="muted">Log in or sign up to manage uploads and comments.</p>
+    <div class="auth-actions">
+      <a class="btn" id="btnLogin" href="#">Log in</a>
+      <a class="btn" id="btnSignup" href="signup.html">Sign up</a>
+    </div>
+    <div id="authMsg" class="muted" style="margin-top:10px"></div>
+  </div>
+</main>
+
+<footer class="footer">© DeenSprouts • <a href="policy.html">Policy</a> • <a href="contact.html">Contact</a></footer>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
+<script>
+  const msg=document.getElementById('authMsg');
+  document.getElementById('btnLogin').addEventListener('click',function(e){
+    e.preventDefault();
+    if(window.netlifyIdentity){ netlifyIdentity.open('login'); msg.textContent=''; }
+    else { window.location.href='signup.html'; }
+  });
+</script>
+<script src="identity.v1101.js?v=1101"></script>
+</body>
+</html>
