@@ -1,116 +1,113 @@
-﻿<!doctypehtml>
-<htmllang="en">
+<!doctype html>
+<html lang="en">
 <head>
-<metacharset="utf-8"><metaname="viewport"content="width=device-width,initial-scale=1">
-<title>DeenSprouts€"Upload</title>
-<linkrel="icon"type="image/png"sizes="32x32"href="favicon-32.png">
-<linkrel="apple-touch-icon"sizes="180x180"href="favicon-180.png">
-<linkrel="stylesheet"href="styles.css?v=1103">
-<style>
-.notice{border:1pxsolid#e6efe9;border-radius:12px;padding:12px;background:#fff;box-shadow:08px20pxrgba(11,107,83,.06);margin-bottom:10px}
-.muteda{color:#0b6b53;text-decoration:underline}
-</style>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeenSprouts — Upload</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+  <link rel="stylesheet" href="styles.css?v=1103">
+  <style>
+    .notice{border:1px solid #e6efe9;border-radius:12px;padding:12px;background:#fff;box-shadow:0 8px 20px rgba(11,107,83,.06);margin-bottom:10px}
+    .muted a{color:#0b6b53;text-decoration:underline}
+  </style>
 </head>
 <body>
-<headerclass="topbar"><navclass="nav">
-<ahref="index.html"class="brand"><imgsrc="assets/logo.png?v=1103"class="logo-nav"alt="DeenSprouts"></a>
-<divclass="nav-gap"></div>
-<aclass="nav-link"href="policy.html">Policy</a>
-<aclass="nav-link"href="contact.html">Contact</a>
-<aclass="nav-link"href="upload.html">Upload</a>
-<aclass="nav-link"id="loginLink"href="auth.html">Log in/Sign up</a>
-
+<header class="topbar"><nav class="nav">
+  <a href="index.html" class="brand"><img src="assets/logo.png?v=1103" class="logo-nav" alt="DeenSprouts"></a>
+  <div class="nav-gap"></div>
+  <a class="nav-link" href="policy.html">Policy</a>
+  <a class="nav-link" href="contact.html">Contact</a>
+  <a class="nav-link" href="upload.html">Upload</a>
+  <a class="nav-link" id="loginLink" href="auth.html">Log in</a>
+  <a class="nav-link" id="signupLink" href="signup.html">Sign up</a>
 </nav></header>
 
-<mainclass="container">
-<divclass="contact-card"style="max-width:860px;margin:0auto;border:1pxsolidvar(--border);border-radius:16px;background:#fff;padding:20px;box-shadow:020px50pxrgba(11,107,83,.08)">
-<h1style="margin-top:0">Uploadyourvideo</h1>
-<divid="gate"class="noticemuted">Checkingsign€‘instatus€¦</div>
+<main class="container">
+  <div class="contact-card" style="max-width:860px;margin:0 auto;border:1px solid var(--border);border-radius:16px;background:#fff;padding:20px;box-shadow:0 20px 50px rgba(11,107,83,.08)">
+    <h1 style="margin-top:0">Upload your video</h1>
+    <div id="gate" class="notice muted">Checking sign‑in status…</div>
 
-<formid="upForm"class="hidden">
-<label>Title<inputtype="text"id="uTitle"required></label>
-<labelstyle="display:block;margin-top:8px">Videofile<inputtype="file"id="uFile"accept="video/mp4,video/webm"required></label>
-<videoid="preview"controlsstyle="max-width:100%;margin-top:8px;display:none"></video>
-<divid="uMsg"class="muted"style="margin:8px0"></div>
-<buttonclass="btn"type="submit">Upload</button>
-</form>
-</div>
+    <form id="upForm" class="hidden">
+      <label>Title <input type="text" id="uTitle" required></label>
+      <label style="display:block;margin-top:8px">Video file <input type="file" id="uFile" accept="video/mp4,video/webm" required></label>
+      <video id="preview" controls style="max-width:100%;margin-top:8px;display:none"></video>
+      <div id="uMsg" class="muted" style="margin:8px 0"></div>
+      <button class="btn" type="submit">Upload</button>
+    </form>
+  </div>
 </main>
 
-<footerclass="footer">© DeenSprouts<ahref="policy.html">Policy</a>€¢<ahref="contact.html">Contact</a></footer>
+<footer class="footer">© DeenSprouts • <a href="policy.html">Policy</a> • <a href="contact.html">Contact</a></footer>
 
-<scriptsrc="auth-ui.v1103.js?v=1103"></script>
+<script src="auth-ui.v1103.js?v=1103"></script>
 <script>
-//Gateuploadtosigned-inusers€"robust,withfallbacksandclearmessaging
-(function(){
-constgate=document.getElementById('gate');
-constform=document.getElementById('upForm');
-constfileEl=document.getElementById('uFile'),prev=document.getElementById('preview'),msg=document.getElementById('uMsg');
+  // Gate upload to signed-in users — robust, with fallbacks and clear messaging
+  (function(){
+    const gate=document.getElementById('gate');
+    const form=document.getElementById('upForm');
+    const fileEl=document.getElementById('uFile'), prev=document.getElementById('preview'), msg=document.getElementById('uMsg');
 
-functionshow(text){gate.innerHTML=text;}
-functionhideGate(){gate.classList.add('hidden');form.classList.remove('hidden');}
+    function show(text){ gate.innerHTML=text; }
+    function hideGate(){ gate.classList.add('hidden'); form.classList.remove('hidden'); }
 
-asyncfunctionidentityAvailable(){
-try{constr=awaitfetch('/.netlify/identity/settings',{cache:'no-store'});returnr.ok;}catch(e){returnfalse;}
-}
-functioninitChecks(){
-if(!window.netlifyIdentity){show('Unabletoloadsign€‘in.Pleaserefreshandtryagain.');return;}
-netlifyIdentity.on('init',(user)=>{
-if(user){hideGate();}else{show('Youmustbesignedintoupload.<ahref="#"id="goLogin">Log in/Sign up</a>or.');
-setTimeout(()=>{document.getElementById('goLogin')?.addEventListener('click',(e)=>{e.preventDefault();netlifyIdentity.open("login");});},0);
-}
-});
-netlifyIdentity.on('login',()=>{hideGate();});
-netlifyIdentity.init();
-}
+    async function identityAvailable(){
+      try{ const r=await fetch('/.netlify/identity/settings', { cache:'no-store' }); return r.ok; }catch(e){ return false; }
+    }
+    function initChecks(){
+      if(!window.netlifyIdentity){ show('Unable to load sign‑in. Please refresh and try again.'); return; }
+      netlifyIdentity.on('init', (user)=>{
+        if(user){ hideGate(); } else { show('You must be signed in to upload. <a href="#" id="goLogin">Log in</a> or <a href="signup.html">Sign up</a>.'); 
+          setTimeout(()=>{ document.getElementById('goLogin')?.addEventListener('click', (e)=>{ e.preventDefault(); netlifyIdentity.open("login"); }); }, 0);
+        }
+      });
+      netlifyIdentity.on('login', ()=>{ hideGate(); });
+      netlifyIdentity.init();
+    }
 
-(asyncfunctionmain(){
-constok=awaitidentityAvailable();
-if(!ok){show('Sign€‘inisnotavailable.PleaseenableNetlifyIdentityinSitesettings†'Identity.');return;}
-//Loadwidgetscript(ifnotalreadyvianav)
-if(!window.netlifyIdentity){
-consts=document.createElement('script');s.src='https://identity.netlify.com/v1/netlify-identity-widget.js';s.defer=true;s.onload=initChecks;document.head.appendChild(s);
-setTimeout(()=>{if(!window.netlifyIdentity){show('Couldnotloadsign€‘in.Checkyournetworkandtryagain.');}},2000);
-}else{
-initChecks();
-}
-})();
+    (async function main(){
+      const ok = await identityAvailable();
+      if(!ok){ show('Sign‑in is not available. Please enable Netlify Identity in Site settings → Identity.'); return; }
+      // Load widget script (if not already via nav)
+      if(!window.netlifyIdentity){
+        const s=document.createElement('script'); s.src='https://identity.netlify.com/v1/netlify-identity-widget.js'; s.defer=true; s.onload=initChecks; document.head.appendChild(s);
+        setTimeout(()=>{ if(!window.netlifyIdentity){ show('Could not load sign‑in. Check your network and try again.'); } }, 2000);
+      }else{
+        initChecks();
+      }
+    })();
 
-fileEl.addEventListener('change',()=>{
-constf=fileEl.files[0];if(!f){prev.style.display='none';return;}
-consturl=URL.createObjectURL(f);prev.src=url;prev.style.display='block';
-prev.onloadedmetadata=()=>{if(prev.duration>300){msg.textContent='Videoislongerthan5minutes.';fileEl.value='';prev.style.display='none';URL.revokeObjectURL(url);}else{msg.textContent='';}};
-});
+    fileEl.addEventListener('change',()=>{
+      const f=fileEl.files[0]; if(!f){ prev.style.display='none'; return;}
+      const url=URL.createObjectURL(f); prev.src=url; prev.style.display='block';
+      prev.onloadedmetadata=()=>{ if(prev.duration>300){ msg.textContent='Video is longer than 5 minutes.'; fileEl.value=''; prev.style.display='none'; URL.revokeObjectURL(url);} else { msg.textContent=''; } };
+    });
 
-document.getElementById('upForm').addEventListener('submit',async(e)=>{
-e.preventDefault();
-constf=fileEl.files[0];consttitle=document.getElementById('uTitle').value.trim();
-if(!f){msg.textContent='Pleasechooseafile.';return;}
-if(f.size>90*1024*1024){msg.textContent='Filetoolarge.Pleasekeepunder~90MB.';return;}
-msg.textContent='Uploading€¦';
-try{
-consttoken=window.netlifyIdentity&&netlifyIdentity.currentUser()&&awaitnetlifyIdentity.currentUser().jwt();
-if(!token){msg.textContent='Pleaseloginagaintoupload.';return;}
-constr=awaitfetch('/.netlify/functions/upload',{
-method:'POST',
-headers:{
-'Content-Type':f.type||'application/octet-stream',
-'X-File-Name':f.name,
-'X-Title':title,
-'Authorization':'Bearer'+token
-},
-body:f
-});
-consttxt=awaitr.text();letdata=null;try{data=JSON.parse(txt);}catch(e){}
-if(!r.ok){msg.textContent=(data&&data.error)||'Uploadfailed.';return;}
-msg.textContent='Uploaded.Thankyou!';setTimeout(()=>{window.location.href='video.html?id='+encodeURIComponent(data.id)+'&type=upload';},1200);
-}catch(e){msg.textContent='Networkerror.Tryagain.';}
-});
-})();
+    document.getElementById('upForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f=fileEl.files[0]; const title=document.getElementById('uTitle').value.trim();
+      if(!f){ msg.textContent='Please choose a file.'; return; }
+      if(f.size>90*1024*1024){ msg.textContent='File too large. Please keep under ~90MB.'; return; }
+      msg.textContent='Uploading…';
+      try{
+        const token = window.netlifyIdentity && netlifyIdentity.currentUser() && await netlifyIdentity.currentUser().jwt();
+        if(!token){ msg.textContent='Please log in again to upload.'; return; }
+        const r=await fetch('/.netlify/functions/upload', {
+          method:'POST',
+          headers:{ 
+            'Content-Type': f.type||'application/octet-stream',
+            'X-File-Name': f.name,
+            'X-Title': title,
+            'Authorization': 'Bearer ' + token
+          },
+          body:f
+        });
+        const txt=await r.text(); let data=null; try{ data=JSON.parse(txt);}catch(e){}
+        if(!r.ok){ msg.textContent=(data&&data.error)||'Upload failed.'; return; }
+        msg.textContent='Uploaded. Thank you!'; setTimeout(()=>{ window.location.href='video.html?id='+encodeURIComponent(data.id)+'&type=upload'; }, 1200);
+      }catch(e){ msg.textContent='Network error. Try again.'; }
+    });
+  })();
 </script>
-<scriptsrc="auth-ui.v1103.js?v=1103"></script>
-<scriptsrc="=1107"></script>
+<script src="auth-ui.v1103.js?v=1103"></script>
 </body>
 </html>
-
-

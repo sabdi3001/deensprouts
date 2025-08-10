@@ -1,46 +1,43 @@
-﻿<!doctypehtml>
-<htmllang="en"><head>
-<metacharset="utf-8"><metaname="viewport"content="width=device-width,initial-scale=1">
-<title>DeenSprouts€"Contact</title>
-<linkrel="icon"type="image/png"sizes="32x32"href="favicon-32.png">
-<linkrel="apple-touch-icon"sizes="180x180"href="favicon-180.png">
-<linkrel="stylesheet"href="styles.css?v=1101">
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeenSprouts — Contact</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<link rel="stylesheet" href="styles.css?v=1101">
 <style>
-.contact-card{max-width:860px;margin:20pxauto;border:1pxsolid#e6efe9;border-radius:16px;background:#fff;padding:22px;box-shadow:024px60pxrgba(11,107,83,.10)}
-.contact-hero{display:flex;gap:12px;align-items:center;margin-bottom:6px}
-.contact-grid{display:grid;grid-template-columns:1fr1fr;gap:12px}
-.contact-cardlabel{display:block;font-weight:700;color:#0f5132;margin-top:8px}
-.contact-cardinput,.contact-cardtextarea{width:100%;padding:12px;border:1pxsolid#e6efe9;border-radius:12px}
-.contact-actions{margin-top:12px}
+  .contact-card{max-width:860px;margin:20px auto;border:1px solid #e6efe9;border-radius:16px;background:#fff;padding:22px;box-shadow:0 24px 60px rgba(11,107,83,.10)}
+  .contact-hero{display:flex;gap:12px;align-items:center;margin-bottom:6px}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .contact-card label{display:block;font-weight:700;color:#0f5132;margin-top:8px}
+  .contact-card input,.contact-card textarea{width:100%;padding:12px;border:1px solid #e6efe9;border-radius:12px}
+  .contact-actions{margin-top:12px}
 </style>
 </head><body>
-<headerclass="topbar"><navclass="nav">
-<ahref="index.html"class="brand"><imgsrc="assets/logo.png?v=1101"class="logo-nav"alt="DeenSprouts"></a>
-<divclass="nav-gap"></div><aclass="nav-link"href="policy.html">Policy</a><aclass="nav-link"href="contact.html">Contact</a><aclass="nav-link"href="upload.html">Upload</a><aclass="nav-link"id="loginLink"href="auth.html">Log in/Sign up</a>
+<header class="topbar"><nav class="nav">
+  <a href="index.html" class="brand"><img src="assets/logo.png?v=1101" class="logo-nav" alt="DeenSprouts"></a>
+  <div class="nav-gap"></div><a class="nav-link" href="policy.html">Policy</a><a class="nav-link" href="contact.html">Contact</a><a class="nav-link" href="upload.html">Upload</a><a class="nav-link" id="loginLink" href="auth.html">Log in</a><a class="nav-link" id="signupLink" href="signup.html">Sign up</a>
 </nav></header>
-<mainclass="container">
-<divclass="contact-card">
-<divclass="contact-hero">
-<imgsrc="assets/logo.png?v=1101"alt="DeenSprouts"style="height:48px;width:auto">
-<div><h1style="margin:0;color:#0f5132">ContactDeenSprouts</h1><divclass="muted">We€™llgetbacktoyoubyemail.</div></div>
-</div>
-<formname="contact"method="POST"data-netlify="true"netlify-honeypot="bot-field"action="/contact-success.html">
-<inputtype="hidden"name="form-name"value="contact">
-<pclass="hidden"><label>Don€™tfillthisoutifyou€™rehuman:<inputname="bot-field"></label></p>
-<divclass="contact-grid">
-<label>Fullname<inputtype="text"name="name"required></label>
-<label>Youremail<inputtype="email"name="email"required></label>
-</div>
-<label>Subject<inputtype="text"name="subject"required></label>
-<label>Message<textareaname="message"rows="6"required></textarea></label>
-<divclass="contact-actions"><buttonclass="btn"type="submit">Sendmessage</button></div>
-</form>
-</div>
+<main class="container">
+  <div class="contact-card">
+    <div class="contact-hero">
+      <img src="assets/logo.png?v=1101" alt="DeenSprouts" style="height:48px;width:auto">
+      <div><h1 style="margin:0;color:#0f5132">Contact DeenSprouts</h1><div class="muted">We’ll get back to you by email.</div></div>
+    </div>
+    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/contact-success.html">
+      <input type="hidden" name="form-name" value="contact">
+      <p class="hidden"><label>Don’t fill this out if you’re human: <input name="bot-field"></label></p>
+      <div class="contact-grid">
+        <label>Full name <input type="text" name="name" required></label>
+        <label>Your email <input type="email" name="email" required></label>
+      </div>
+      <label>Subject <input type="text" name="subject" required></label>
+      <label>Message <textarea name="message" rows="6" required></textarea></label>
+      <div class="contact-actions"><button class="btn" type="submit">Send message</button></div>
+    </form>
+  </div>
 </main>
-<footerclass="footer">© DeenSprouts<ahref="policy.html">Policy</a>€¢<ahref="contact.html">Contact</a></footer>
-<scriptsrc="identity.v1101.js?v=1101"></script>
-<scriptsrc="auth-ui.v1103.js?v=1103"></script>
-<scriptsrc="=1107"></script>
+<footer class="footer">© DeenSprouts • <a href="policy.html">Policy</a> • <a href="contact.html">Contact</a></footer>
+<script src="identity.v1101.js?v=1101"></script>
+<script src="auth-ui.v1103.js?v=1103"></script>
 </body></html>
-
-
