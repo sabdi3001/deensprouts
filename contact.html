@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeenSprouts — Contact</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+<link rel="stylesheet" href="styles.css?v=1002">
+</head><body>
+<header class="topbar"><nav class="nav">
+  <a href="index.html" class="brand"><img src="assets/logo.png?v=1002" class="logo-nav" alt="DeenSprouts"></a>
+  <div class="nav-gap"></div><a class="nav-link" href="policy.html">Policy</a><a class="nav-link" href="contact.html">Contact</a>
+</nav></header>
+<main class="container">
+  <div class="contact-card">
+    <div class="contact-hero" style="display:flex;gap:12px;align-items:center;margin-bottom:10px">
+      <img src="assets/logo.png?v=1002" alt="DeenSprouts" style="height:48px;width:auto">
+      <div><h1 style="margin:0;color:#0f5132">Contact DeenSprouts</h1><div class="muted">We’ll get back to you by email.</div></div>
+    </div>
+    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/contact-success.html">
+      <input type="hidden" name="form-name" value="contact">
+      <p class="hidden"><label>Don’t fill this out if you’re human: <input name="bot-field"></label></p>
+      <div class="contact-grid">
+        <label>Full name <input type="text" name="name" required></label>
+        <label>Your email <input type="email" name="email" required></label>
+      </div>
+      <label>Subject <input type="text" name="subject" required></label>
+      <label>Message <textarea name="message" rows="6" required></textarea></label>
+      <div class="contact-actions"><button class="btn" type="submit">Send message</button></div>
+    </form>
+  </div>
+</main>
+<footer class="footer">© DeenSprouts • <a href="policy.html">Policy</a> • <a href="contact.html">Contact</a></footer>
+</body></html>
