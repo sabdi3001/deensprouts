@@ -6,15 +6,16 @@
   <title>DeenSprouts — Sign up</title>
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
-  <link rel="stylesheet" href="styles.css?v=1005">
+  <link rel="stylesheet" href="styles.css?v=1100">
 </head>
 <body>
   <header class="topbar">
     <nav class="nav">
-      <a href="index.html" class="brand"><img src="assets/logo.png?v=1005" class="logo-nav" alt="DeenSprouts"></a>
+      <a href="index.html" class="brand"><img src="assets/logo.png?v=1100" class="logo-nav" alt="DeenSprouts"></a>
       <div class="nav-gap"></div>
       <a class="nav-link" href="policy.html">Policy</a>
       <a class="nav-link" href="contact.html">Contact</a>
+      <a class="nav-link" href="upload.html">Upload</a>
       <a class="nav-link" id="loginLink" href="auth.html">Log in</a>
       <a class="nav-link" id="signupLink" href="signup.html">Sign up</a>
     </nav>
@@ -45,40 +46,30 @@
 
   <footer class="footer">© DeenSprouts • <a href="policy.html">Policy</a> • <a href="contact.html">Contact</a></footer>
 
-  <script src="identity.v1005.js?v=1005"></script>
+  <script src="identity.v1100.js?v=1100"></script>
   <script>
     function ageFrom(Y,M,D){
-      const today=new Date(); let age=today.getFullYear()-Y;
-      const m=today.getMonth()+1 - M;
-      if(m<0 || (m===0 && today.getDate()<D)) age--;
-      return age;
+      const t=new Date(); let a=t.getFullYear()-Y;
+      const m=(t.getMonth()+1)-M; if(m<0||(m===0&&t.getDate()<D)) a--;
+      return a;
     }
     document.getElementById('suForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
-      const email = document.getElementById('suEmail').value.trim();
-      const pass  = document.getElementById('suPass').value;
-      const Y = parseInt(document.getElementById('dobY').value,10);
-      const M = parseInt(document.getElementById('dobM').value,10);
-      const D = parseInt(document.getElementById('dobD').value,10);
-      const msg = document.getElementById('suMsg');
-      if(!email || !pass || !Y || !M || !D){ msg.textContent='Please complete all fields.'; return; }
-      if(ageFrom(Y,M,D) < 13){ msg.textContent='You must be at least 13 to sign up.'; return; }
+      const email=document.getElementById('suEmail').value.trim();
+      const pass=document.getElementById('suPass').value;
+      const Y=parseInt(document.getElementById('dobY').value,10);
+      const M=parseInt(document.getElementById('dobM').value,10);
+      const D=parseInt(document.getElementById('dobD').value,10);
+      const msg=document.getElementById('suMsg');
+      if(!email||!pass||!Y||!M||!D){ msg.textContent='Please complete all fields.'; return; }
+      if(ageFrom(Y,M,D)<13){ msg.textContent='You must be at least 13 to sign up.'; return; }
       msg.textContent='Creating your account…';
-
       try{
-        const r = await fetch('/.netlify/identity/signup', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ email, password: pass, data: { dob: `${Y}-${String(M).padStart(2,'0')}-${String(D).padStart(2,'0')}` } })
-        });
-        const txt = await r.text();
-        let data = null; try{ data = JSON.parse(txt); }catch(e){}
-        if(!r.ok){ msg.textContent=(data && (data.error || data.msg)) || 'Sign up failed.'; return; }
-        msg.textContent='Account created. Please check your email to verify.';
-        setTimeout(()=>{ window.location.href='auth.html'; }, 1500);
-      }catch(err){
-        msg.textContent='Network error. Please try again.';
-      }
+        const r=await fetch('/.netlify/identity/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass,data:{dob:`${Y}-${String(M).padStart(2,'0')}-${String(D).padStart(2,'0')}`}})});
+        const txt=await r.text(); let data=null; try{data=JSON.parse(txt);}catch(e){}
+        if(!r.ok){ msg.textContent=(data&&(data.error||data.msg))||'Sign up failed.'; return; }
+        msg.textContent='Account created. Check your email to verify.'; setTimeout(()=>{window.location.href='auth.html';},1400);
+      }catch(e){ msg.textContent='Network error. Try again.'; }
     });
   </script>
 </body>

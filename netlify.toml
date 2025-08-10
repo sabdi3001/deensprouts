@@ -1,33 +1,16 @@
-# netlify.toml — functions + Node 18 + headers (cache bust)
 [build]
-command = ""
-publish = "."
+  publish = "."
+  command = ""
 
 [functions]
-directory = "netlify/functions"
-node_bundler = "esbuild"
-
-[build.environment]
-NODE_VERSION = "18"
+  node_bundler = "esbuild"
 
 [[headers]]
-  for = "/*"
+  for = "/*.js"
   [headers.values]
-    Cache-Control = "no-store"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
+    Cache-Control = "no-store, must-revalidate"
 
 [[headers]]
-  for = "/app.v901.js"
+  for = "/styles.css"
   [headers.values]
-    Cache-Control = "no-store"
-
-[[headers]]
-  for = "/watch.v901.js"
-  [headers.values]
-    Cache-Control = "no-store"
-
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "no-store, must-revalidate"

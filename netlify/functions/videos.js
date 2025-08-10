@@ -1,30 +1,24 @@
-
-const https = require('https');
-function getJSON(url){
-  return new Promise((resolve, reject)=>{
-    const req = https.get(url, (res)=>{
-      let data=''; res.on('data', c=>data+=c);
-      res.on('end', ()=>{
-        try{
-          const p = JSON.parse(data);
-          if(res.statusCode>=200 && res.statusCode<300) return resolve(p);
-          resolve({ error:'Upstream error', status:res.statusCode, detail:p });
-        }catch(e){
-          resolve({ error:'Invalid JSON', status:res.statusCode, detail:data });
-        }
-      });
-    });
-    req.on('error', reject); req.end();
-  });
-}
-
-exports.handler = async (event)=>{
-  const API_KEY = process.env.YOUTUBE_API_KEY;
-  if(!API_KEY) return { statusCode:500, body: JSON.stringify({ error:'YOUTUBE_API_KEY not set' }) };
+export async function handler(event) {
+  const key = process.env.YOUTUBE_API_KEY;
+  if(!key) return { statusCode: 500, body: JSON.stringify({ error: "Missing YOUTUBE_API_KEY" }) };
   const q = (event.queryStringParameters && event.queryStringParameters.q) || "islamic kids";
   const pageToken = (event.queryStringParameters && event.queryStringParameters.pageToken) || "";
-  let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=${encodeURIComponent(q)}&type=video&videoEmbeddable=true&safeSearch=strict&videoDuration=medium&key=${API_KEY}`;
-  if(pageToken) url += `&pageToken=${encodeURIComponent(pageToken)}`;
-  try{ const data=await getJSON(url); return { statusCode:200, headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) }; }
-  catch(e){ return { statusCode:500, body: JSON.stringify({ error:'Function fetch failed', detail:e.message }) }; }
-};
+  const max = Math.max(1, Math.min(50, parseInt((event.queryStringParameters && event.queryStringParameters.max) || "20", 10)));
+
+  const url = new URL("https://www.googleapis.com/youtube/v3/search");
+  url.searchParams.set("key", key);
+  url.searchParams.set("part", "snippet");
+  url.searchParams.set("q", q);
+  url.searchParams.set("type", "video");
+  url.searchParams.set("maxResults", String(max));
+  url.searchParams.set("videoEmbeddable", "true");
+  url.searchParams.set("safeSearch", "moderate");
+  url.searchParams.set("relevanceLanguage", "en");
+  url.searchParams.set("regionCode", "US");
+  if(pageToken) url.searchParams.set("pageToken", pageToken);
+
+  const r = await fetch(url, { headers: { "Accept": "application/json" } });
+  const body = await r.text();
+  if(!r.ok) return { statusCode: r.status, body };
+  return { statusCode: 200, body };
+}

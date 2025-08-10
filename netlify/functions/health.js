@@ -1,1 +1,3 @@
-exports.handler = async ()=>{ const key=!!process.env.YOUTUBE_API_KEY; return { statusCode:200, headers:{'Content-Type':'application/json'}, body: JSON.stringify({ ok:true, youtube_api_key: key?'present':'missing', node: process.version }) }; };
+export async function handler() {
+  return { statusCode: 200, body: JSON.stringify({ youtube_api_key: !!process.env.YOUTUBE_API_KEY }) };
+}

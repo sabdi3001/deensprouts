@@ -1,0 +1,9 @@
+{
+  "name": "deensprouts",
+  "version": "11.0.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@netlify/blobs": "^6.3.0"
+  }
+}
