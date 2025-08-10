@@ -14,6 +14,19 @@
   .contact-actions{margin-top:12px}
 </style>
 </head><body>
+<header id="site-nav" class="ds-nav" style="position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #e6efe9">
+  <div style="max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:16px">
+    <a href="/index.html" class="brand" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+      <img src="assets/logo.png?v=ph" alt="DeenSprouts" style="height:48px;width:auto;border-radius:10px;object-fit:contain;background:transparent">
+      <span style="font-weight:800;color:#0b6b53;font-size:20px">DeenSprouts</span>
+    </a>
+    <nav class="links" style="margin-left:auto;display:flex;gap:16px;align-items:center">
+      <a href="/index.html" style="color:#0b6b53;text-decoration:none;font-weight:600">Home</a>
+      <a id="uploadLink" href="/upload.html" style="display:none;color:#0b6b53;text-decoration:none;font-weight:600">Upload</a>
+      <a id="loginLink" href="/login.html" style="color:#0b6b53;text-decoration:none;font-weight:700">Log in</a>
+    </nav>
+  </div>
+</header>
 <header class="topbar"><nav class="nav">
   <a href="index.html" class="brand"><img src="assets/logo.png?v=1101" class="logo-nav" alt="DeenSprouts"></a>
   <div class="nav-gap"></div><a class="nav-link" href="policy.html">Policy</a><a class="nav-link" href="contact.html">Contact</a><a class="nav-link" href="upload.html">Upload</a><a class="nav-link" id="loginLink" href="auth.html">Log in</a><a class="nav-link" id="signupLink" href="signup.html">Sign up</a>
@@ -40,4 +53,6 @@
 <footer class="footer">© DeenSprouts • <a href="policy.html">Policy</a> • <a href="contact.html">Contact</a></footer>
 <script src="identity.v1101.js?v=1101"></script>
 <script src="auth-ui.v1103.js?v=1103"></script>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="js/nav.identity.v1205.js?v=1205"></script>
 </body></html>
