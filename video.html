@@ -1,8 +1,60 @@
-<!-- video.html with nav.login-upload-guard include -->
-<html>
-<head><title>Patched</title></head>
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeenSprouts â€” Watch</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon-180.png">
+  <link rel="stylesheet" href="styles.css?v=1101">
+  <style>
+    .comments-wrap{margin-top:14px}
+    .comments-wrap .comment-card{border:1px solid #e6efe9;border-radius:14px;padding:12px;background:#fff;box-shadow:0 10px 26px rgba(11,107,83,.08)}
+  </style>
+</head>
 <body>
-<h1>video.html content...</h1>
-<script src="js/nav.login-upload-guard.v1106.js?v=1106"></script>
+<header class="topbar">
+  <nav class="nav">
+    <a href="index.html" class="brand"><img src="assets/logo.png?v=1101" class="logo-nav" alt="DeenSprouts"></a>
+    <div class="nav-gap"></div>
+    <a class="nav-link" href="policy.html">Policy</a>
+    <a class="nav-link" href="contact.html">Contact</a>
+    <a class="nav-link" href="upload.html">Upload</a>
+    <a class="nav-link" id="loginLink" href="auth.html">Log in</a>
+    <a class="nav-link" id="signupLink" href="signup.html">Sign up</a>
+  </nav>
+</header>
+
+<main class="container watch">
+  <section class="watch-main">
+    <div class="player-outer card" id="playerBox"></div>
+    <div class="meta-row">
+      <span class="chip">Safe â€¢ Embeds Only</span>
+      <span class="chip">Kids â€¢ English</span>
+    </div>
+    <div id="watch-title" class="watch-title">Loadingâ€¦</div>
+
+    <div class="comments-wrap">
+      <h3>Comments</h3>
+      <div id="comments"></div>
+      <div class="comment-form">
+        <input id="cName" placeholder="Name">
+        <input id="cText" placeholder="Write a comment...">
+        <button id="cBtn" class="btn">Post</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="watch-side">
+    <h3 class="side-heading">Related</h3>
+    <div id="related-videos" class="related-list"></div>
+  </aside>
+</main>
+
+<footer class="footer">Â© DeenSprouts â€¢ <a href="policy.html">Policy</a> â€¢ <a href="contact.html">Contact</a></footer>
+<script src="watch.v1102.js?v=1102"></script>
+<script src="identity.v1101.js?v=1101"></script>
+<script src="auth-ui.v1103.js?v=1103"></script>
+<script src="=1107"></script>
 </body>
 </html>
+
