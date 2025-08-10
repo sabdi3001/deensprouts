@@ -1,81 +1,92 @@
 Param(
-  [string]$Root = "."
+  [string]$Root = ".",
+  [switch]$DryRun
 )
 
-Write-Host "Starting cleanup in: $Root" -ForegroundColor Cyan
+Write-Host "DeenSprouts Cleanup v1202b — Root: $Root  DryRun:$DryRun" -ForegroundColor Cyan
 
-# Gather all HTML files
 $files = Get-ChildItem -Path $Root -Recurse -Include *.html -File -ErrorAction SilentlyContinue
 $opt = [System.Text.RegularExpressions.RegexOptions]::Singleline -bor [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
 
-# --- Patterns ---
-
-# Remove standalone "Sign up" anchors/buttons (common nav patterns)
+# ---- Patterns ----
+# Remove standalone "Sign up" anchors/buttons
 $removePatterns = @(
   '<li[^>]*>\s*<a[^>]*id\s*=\s*["'']signupLink["''][^>]*>.*?<\/a>\s*<\/li>',
   '<a[^>]*id\s*=\s*["'']signupLink["''][^>]*>.*?<\/a>',
-  '<li[^>]*>\s*<a[^>]*href\s*=\s*["''][^"'']*signup[^"'']*["''][^>]*>.*?<\/a>\s*<\/li>',
-  '<a[^>]*href\s*=\s*["''][^"'']*signup[^"'']*["''][^>]*>.*?<\/a>',
+  '<li[^>]*>\s*<a[^>]*href\s*=\s*["''][^"''>]*signup[^"''>]*["''][^>]*>.*?<\/a>\s*<\/li>',
+  '<a[^>]*href\s*=\s*["''][^"''>]*signup[^"''>]*["''][^>]*>.*?<\/a>',
   '<button[^>]*id\s*=\s*["'']signupLink["''][^>]*>.*?<\/button>',
   '<button[^>]*>[^<]*sign\s*up[^<]*<\/button>'
 )
 
-# Relabel login anchor/button text to "Log in/Sign up" (insides only)
-$loginRelabel = @(
-  '(<a\b[^>]*>\s*)(?:log\s*in|login)(\s*<\/a>)',
-  '(<button\b[^>]*>\s*)(?:log\s*in|login)(\s*<\/button>)'
-)
+function Normalize-Text([string]$html) {
+  # Strip zero-width / BOM / word-joiners
+  $html = $html -replace '[\u200B-\u200D\uFEFF\u2060]', ''
+  # nbsp to space
+  $html = $html -replace '&nbsp;', ' '
+  $html = $html -replace '\u00A0', ' '
 
-function Clean-FooterText([string]$html) {
-  # Remove encoding artifacts
-  $html = $html -replace 'Â|�', ''
+  # Mojibake fixes
+  $html = $html -replace 'Â', ''
+  $html = $html -replace '�', ''
+  $html = $html -replace '–', '-'
+  $html = $html -replace '—', '-'
+  $html = $html -replace '[“”]', '"'
+  $html = $html -replace '[‘’]', "'"
 
-  # Normalize copyright symbol forms to ©
-  $html = $html -replace '&copy;|\(c\)|&#169;|&\#169;', '©'
-
-  # Collapse duplicated ©
-  $html = $html -replace '©\s*©', '©'
-
-  # Normalize "© DeenSprouts" phrase (allow minor spacing variations)
-  $html = $html -replace '©\s*Deen\s*Sprouts[^<]*', '© DeenSprouts'
-
-  # Trim excessive spaces
-  $html = $html -replace '\s{2,}', ' '
-
+  # Collapse repeated spaces/tabs
+  $html = $html -replace '[ \t]{2,}', ' '
   return $html
 }
 
+function Clean-Footer([string]$html) {
+  $html = $html -replace '&copy;|\(c\)|&#169;|&\#169;', '©'
+  $html = $html -replace '©\s*©', '©'
+  $html = $html -replace '©\s*Deen\s*Sprouts[^<\r\n]*', '© DeenSprouts'
+  $html = $html -replace '©\s*Deensprouts[^<\r\n]*', '© DeenSprouts'
+  return $html
+}
+
+function Relabel-Login([string]$html) {
+  # Replace text inside anchors/buttons where it is exactly "Login" or "Log in"
+  $html = [regex]::Replace($html, '(<a\b[^>]*>)\s*(?:log\s*in|login)\s*(<\/a>)', '$1Log in/Sign up$2', $opt)
+  $html = [regex]::Replace($html, '(<button\b[^>]*>)\s*(?:log\s*in|login)\s*(<\/button>)', '$1Log in/Sign up$2', $opt)
+
+  # Fallback: standalone >Login< or >Log in< text nodes
+  $html = [regex]::Replace($html, '>(\s*login\s*)<', '>Log in/Sign up<', $opt)
+  $html = [regex]::Replace($html, '>(\s*log\s*in\s*)<', '>Log in/Sign up<', $opt)
+  return $html
+}
+
+$changed = 0
 foreach($f in $files){
   try{
     $orig = Get-Content $f.FullName -Raw
     $updated = $orig
 
-    # 1) Remove sign up elements
-    foreach($pat in $removePatterns){
-      $updated = [regex]::Replace($updated, $pat, '', $opt)
-    }
-    # remove empty <li> leftovers
+    foreach($pat in $removePatterns){ $updated = [regex]::Replace($updated, $pat, '', $opt) }
+    # Clean empty <li> shells
     $updated = [regex]::Replace($updated, '<li[^>]*>\s*<\/li>', '', $opt)
 
-    # 2) Relabel login only inside anchors/buttons
-    foreach($pat in $loginRelabel){
-      $updated = [regex]::Replace($updated, $pat, '$1Log in/Sign up$2', $opt)
-    }
-
-    # 3) Footer cleanup
-    $updated = Clean-FooterText $updated
+    $updated = Normalize-Text $updated
+    $updated = Clean-Footer  $updated
+    $updated = Relabel-Login $updated
 
     if($updated -ne $orig){
-      Copy-Item $f.FullName "$($f.FullName).bak" -Force
-      Set-Content -Path $f.FullName -Value $updated -Encoding UTF8
-      Write-Host "Patched: $($f.FullName) (backup: $($f.Name).bak)" -ForegroundColor Green
+      if($DryRun){
+        Write-Host "[DRY] Would patch: $($f.FullName)" -ForegroundColor Yellow
+      } else {
+        Copy-Item $f.FullName "$($f.FullName).bak" -Force
+        Set-Content -Path $f.FullName -Value $updated -Encoding UTF8
+        Write-Host "Patched: $($f.FullName) (backup: $($f.Name).bak)" -ForegroundColor Green
+        $changed++
+      }
     } else {
       Write-Host "No changes: $($f.FullName)"
     }
-  }
-  catch{
+  } catch {
     Write-Warning "Failed to patch: $($f.FullName) — $($_.Exception.Message)"
   }
 }
 
-Write-Host "Done." -ForegroundColor Cyan
+Write-Host "Done. Files changed: $changed" -ForegroundColor Cyan
